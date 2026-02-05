@@ -221,7 +221,7 @@ A conditional market uses an outcome token from another market (the "parent") as
 
 **Structure:**
 - **Parent market:** "Will Trump win the 2028 election?" (YES/NO)
-- **Child market:** "If Trump wins, will he pardon Ross Ulbricht?" (YES/NO)
+- **Child market:** "Will Ross Ulbricht be pardoned before 2030-01-01?" (YES/NO)
   - Collateral: YES tokens from parent market
   - Payout: Only if Trump wins (parent YES resolves)
 
@@ -230,42 +230,22 @@ A conditional market uses an outcome token from another market (the "parent") as
 - **Risk hedging:** Hedge specific scenarios within broader outcomes
 - **Nested decisions:** Decision trees with dependencies
 
----
-
-### How conditional markets work
-
 **Payout logic:**
-1. Parent market resolves
-2. If parent outcome used as collateral LOSES → child tokens worthless
-3. If parent outcome WINS → child market pays out normally
-
-**Example:**
-- Parent: "Will Trump win 2028?" (YES/NO)
-- Child: "If Trump wins, will he pardon Ulbricht?" (collateralized by parent YES)
-  - If Trump loses (parent NO wins) → child YES and child NO both worthless
-  - If Trump wins (parent YES wins) → child pays out 1:1 for correct answer
+- If parent outcome used as collateral LOSES → child tokens worthless
+- If parent outcome WINS → child market pays out normally
 
 ---
 
 ### Creating a conditional market
 
-**Step 1: Create parent market**
-```bash
-node create-market.mjs --type categorical \
-  --name "Will Trump win the 2028 US presidential election?" \
-  --outcomes "Yes,No" \
-  --tokens "YES,NO" \
-  --category politics \
-  --opening-time 2028-11-10 \
-  --min-bond 10
-```
+**Step 1: Get parent market address**
 
-Save the parent market address (e.g., `0xPARENT123...`).
+For this example, the parent market is "Will Trump win the 2028 US presidential election?" — search for it first (see [DISCOVERING-MARKETS.md](DISCOVERING-MARKETS.md)). If it exists, use its address. If not, create it (see [CREATING-MARKETS-BASIC.md](CREATING-MARKETS-BASIC.md)).
 
 **Step 2: Create child market**
 ```bash
 node create-market.mjs --type categorical \
-  --name "If Trump wins 2028, will he pardon Ross Ulbricht before 2030-01-01?" \
+  --name "Will Ross Ulbricht be pardoned before 2030-01-01?" \
   --outcomes "Yes,No" \
   --tokens "YES,NO" \
   --category politics \
@@ -275,9 +255,7 @@ node create-market.mjs --type categorical \
   --parent-outcome 0
 ```
 
-**Parameters:**
-- `--parent-market`: Address of the parent market
-- `--parent-outcome`: Index of the outcome to use as collateral (0 = first outcome, 1 = second, etc.)
+`--parent-market` and `--parent-outcome` encode the precondition — no need to repeat it in the question name. Outcome index: 0 = first outcome, 1 = second, etc.
 
 ---
 
@@ -356,57 +334,6 @@ A: Child market liquidity will be low until parent resolves. Price discovery hap
 
 **Q: Can I nest conditionals multiple levels?**
 A: Yes, but liquidity will be extremely thin. Not recommended beyond 2 levels.
-
----
-
-## Scripts Reference
-
-### create-market.mjs (scalar)
-
-```bash
-node create-market.mjs --type scalar \
-  --name "[Question with source and time]" \
-  --outcomes "Low,High" \
-  --tokens "LOW,HIGH" \
-  --category [category] \
-  --opening-time YYYY-MM-DD \
-  --min-bond [amount] \
-  --lower-bound [min] \
-  --upper-bound [max]
-```
-
----
-
-### create-market.mjs (multi-scalar)
-
-```bash
-node create-market.mjs --type multi-scalar \
-  --outcomes "[Outcome1],[Outcome2],[Outcome3]" \
-  --tokens "[TOKEN1],[TOKEN2],[TOKEN3]" \
-  --question-start "How many X will " \
-  --question-end " achieve?" \
-  --outcome-type [type] \
-  --category [category] \
-  --opening-time YYYY-MM-DD \
-  --min-bond [amount] \
-  --upper-bound [total]
-```
-
----
-
-### create-market.mjs (conditional)
-
-```bash
-node create-market.mjs --type categorical \
-  --name "If [parent outcome], will [child question]?" \
-  --outcomes "Yes,No" \
-  --tokens "YES,NO" \
-  --category [category] \
-  --opening-time YYYY-MM-DD \
-  --min-bond [amount] \
-  --parent-market 0x... \
-  --parent-outcome [index]
-```
 
 ---
 

@@ -275,56 +275,6 @@ See [LIQUIDITY-PROVISION.md](LIQUIDITY-PROVISION.md#risk-management-for-lps) for
 
 ---
 
-## Scripts Reference
-
-### answer-question.mjs
-
-**Answer categorical market:**
-```bash
-node answer-question.mjs --question-id 0x... --answer-index 0 --bond 10
-```
-
-**Answer scalar market:**
-```bash
-node answer-question.mjs --question-id 0x... --answer-value 5000 --bond 10
-```
-
-**Answer as INVALID:**
-```bash
-node answer-question.mjs --question-id 0x... --answer-index INVALID --bond 10
-```
-
-**Parameters:**
-- `--question-id`: From `read-market.mjs` output
-- `--answer-index`: Outcome index (0, 1, ...) or INVALID/ANSWERED_TOO_SOON
-- `--answer-value`: For scalar markets, numeric value
-- `--bond`: Amount in native token (must exceed minBond and previous bonds)
-
----
-
-### resolve-market.mjs
-
-**Resolve market after finalization:**
-```bash
-node resolve-market.mjs --market 0x...
-```
-
-Call after:
-1. Answer submitted to Reality.eth
-2. Timeout passed (~3.5 days)
-3. No challenge (or challenge resolved)
-
----
-
-### check-balance.mjs
-
-**Check specific token balance:**
-```bash
-node check-balance.mjs --token 0x<token-address>
-```
-
----
-
 ## Common Questions
 
 **Q: What if I miss the opening time?**

@@ -14,6 +14,7 @@ Before creating a market, think carefully about what you want to predict. A poor
 
 Ask yourself:
 
+- ✅ **Does a similar market already exist?** (Search first — see [DISCOVERING-MARKETS.md](DISCOVERING-MARKETS.md))
 - ✅ **What exactly am I trying to predict?** (Specific event, outcome, or metric)
 - ✅ **Has this already happened?** (Search recent news, check official sources)
 - ✅ **Can this be objectively verified?** (Zero subjectivity, clear source of truth)
@@ -163,44 +164,6 @@ Once your market is created:
 - **Answer when appropriate** (you created it, you should ensure correct resolution)
 - **Resolve after finalization** (~3.5 days after first answer)
 - **Trade or provide liquidity** if you have a view on the outcome
-
----
-
-## Scripts Reference
-
-### create-market.mjs (basic categorical)
-
-**Create Yes/No market:**
-```bash
-node create-market.mjs --type categorical \
-  --name "Will X happen before [date]?" \
-  --outcomes "Yes,No" \
-  --tokens "YES,NO" \
-  --category [category] \
-  --min-bond 5
-```
-
-**Create multiple choice market:**
-```bash
-node create-market.mjs --type categorical \
-  --name "Which outcome will occur?" \
-  --outcomes "A,B,C,Other" \
-  --tokens "A,B,C,OTHER" \
-  --category [category] \
-  --opening-time YYYY-MM-DD \
-  --min-bond 10
-```
-
-**Required parameters:**
-- `--type categorical`
-- `--name` "The question"
-- `--outcomes` "Outcome1,Outcome2,..."
-- `--tokens` "TOKEN1,TOKEN2,..."
-- `--category` crypto|politics|sports|technology|science|other
-- `--min-bond` amount (in native token)
-
-**Optional parameters:**
-- `--opening-time` YYYY-MM-DD or YYYY-MM-DD-HH-MM (earliest answer date, defaults to now)
 
 ---
 

@@ -11,31 +11,6 @@ description: "Create, trade, resolve, monitor and provide liquidity in predictio
 
 ---
 
-## Quick Start - Choose Your Path
-
-**I want to trade (buy/sell predictions):**
-→ Read **[TRADING.md](TRADING.md)**
-→ Scripts: `swap.mjs`, `split-collateral.mjs`, `merge-redeem.mjs`
-→ Learn: How to buy YES/NO tokens, manage positions, redeem winners
-
-**I want to create markets:**
-→ Start: **[CREATING-MARKETS-BASIC.md](CREATING-MARKETS-BASIC.md)** (yes/no questions)
-→ Advanced: **[CREATING-MARKETS-ADVANCED.md](CREATING-MARKETS-ADVANCED.md)** (scalar, conditional, multi-scalar)
-→ Policy: **[abridged-resolution-policy.md](abridged-resolution-policy.md)** (avoid INVALID markets)
-→ Scripts: `create-market.mjs`, `answer-question.mjs`, `resolve-market.mjs`
-
-**I want to provide liquidity:**
-→ Read **[LIQUIDITY-PROVISION.md](LIQUIDITY-PROVISION.md)**
-→ Scripts: `add-liquidity.mjs`, `withdraw-liquidity.mjs`
-→ Learn: Concentrated liquidity, probability modeling, impermanent loss, risk management
-
-**I want to monitor my positions:**
-→ Read **[MONITORING-MARKETS.md](MONITORING-MARKETS.md)**
-→ Scripts: `get-positions.mjs`, `get-lp-positions.mjs`, `answer-question.mjs`, `resolve-market.mjs`
-→ Learn: Position tracking, answering Reality.eth questions, HEARTBEAT integration
-
----
-
 ## What is Seer?
 
 Seer is a decentralized prediction market platform deployed on multiple chains. It combines:
@@ -160,37 +135,4 @@ node setup.mjs
 | [DISCOVERING-MARKETS.md](DISCOVERING-MARKETS.md) | Browse markets via API, share markets with humans |
 | [abridged-resolution-policy.md](abridged-resolution-policy.md) | Avoid INVALID markets, resolution rules |
 
----
-
-## Quick Script Reference
-
-All scripts are in `scripts/`. Run with `node <script> --flags`.
-
-### Trading
-- `swap.mjs` - Buy/sell outcome tokens via DEX (all chains)
-- `split-collateral.mjs` - Convert collateral → equal outcome tokens (all chains)
-- `merge-redeem.mjs` - Merge complete sets or redeem winners (all chains)
-
-### Market Creation
-- `create-market.mjs` - Create categorical/scalar/multi-scalar markets
-- `read-market.mjs` - View market details
-
-### Liquidity
-- `add-liquidity.mjs` - Add concentrated liquidity to outcome pools
-- `withdraw-liquidity.mjs` - Exit LP positions
-
-### Resolution
-- `answer-question.mjs` - Answer or challenge Reality.eth questions
-- `resolve-market.mjs` - Finalize market after timeout
-
-### Discovery
-- `search-markets.mjs` - Search/browse markets via Seer API (no key needed)
-- `get-positions.mjs` - Show your token holdings across all chains
-- `get-lp-positions.mjs` - Show tracked LP positions (local tracker, auto-populated)
-
-### Utilities
-- `approve-router.mjs` - Check/approve collateral to Router (run once per chain)
-- `check-balance.mjs` - Check token balances (all chains)
-- `convert-collateral.mjs` - Convert native ↔ collateral (all chains)
-
-**For detailed usage of each script, see the relevant guide above.**
+All scripts are in `scripts/`. See the relevant guide for usage.
