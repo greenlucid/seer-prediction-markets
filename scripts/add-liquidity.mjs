@@ -132,6 +132,7 @@ const { account, walletClient, publicClient } = getClients(chainName);
 
 console.log(`Creating/initializing pool if needed...`);
 let hash;
+let poolAddress;
 
 if (chainConfig.dex.type === "swaprv3") {
   // Algebra (SwaprV3) - no fee parameter
@@ -139,6 +140,16 @@ if (chainConfig.dex.type === "swaprv3") {
     inputs: [{ name: "token0", type: "address" }, { name: "token1", type: "address" },
       { name: "sqrtPriceX96", type: "uint160" }],
     outputs: [{ name: "pool", type: "address" }] }];
+
+  // Simulate to get pool address
+  const { result } = await publicClient.simulateContract({
+    address: chainConfig.dex.nonfungiblePositionManager,
+    abi: CREATE_AND_INIT_ABI,
+    functionName: "createAndInitializePoolIfNecessary",
+    args: [token0, token1, sqrtPriceX96],
+    account: account.address,
+  });
+  poolAddress = result;
 
   hash = await walletClient.writeContract({
     address: chainConfig.dex.nonfungiblePositionManager, abi: CREATE_AND_INIT_ABI,
@@ -152,6 +163,16 @@ if (chainConfig.dex.type === "swaprv3") {
       { name: "fee", type: "uint24" }, { name: "sqrtPriceX96", type: "uint160" }],
     outputs: [{ name: "pool", type: "address" }] }];
 
+  // Simulate to get pool address
+  const { result } = await publicClient.simulateContract({
+    address: chainConfig.dex.nonfungiblePositionManager,
+    abi: CREATE_AND_INIT_ABI,
+    functionName: "createAndInitializePoolIfNecessary",
+    args: [token0, token1, chainConfig.dex.fee, sqrtPriceX96],
+    account: account.address,
+  });
+  poolAddress = result;
+
   hash = await walletClient.writeContract({
     address: chainConfig.dex.nonfungiblePositionManager, abi: CREATE_AND_INIT_ABI,
     functionName: "createAndInitializePoolIfNecessary",
@@ -160,6 +181,7 @@ if (chainConfig.dex.type === "swaprv3") {
 }
 
 await publicClient.waitForTransactionReceipt({ hash });
+console.log(`Pool: ${poolAddress}`);
 
 console.log(`Approving tokens to position manager...`);
 hash = await walletClient.writeContract({ address: outcomeToken, abi: ERC20_APPROVE_ABI, functionName: "approve",
@@ -263,6 +285,7 @@ try {
     tokenId: String(tokenId),
     chain: chainName || "gnosis",
     dexType: chainConfig.dex.type,
+    poolAddress,
     token0,
     token1,
     probLow,

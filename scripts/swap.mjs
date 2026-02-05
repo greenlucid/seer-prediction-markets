@@ -54,22 +54,22 @@ let poolAddress;
 let currentTick, currentPrice;
 
 if (chainConfig.dex.type === "swaprv3") {
-  // Algebra-based (SwaprV3) - use computeAddress
-  const COMPUTE_ADDRESS_ABI = [
-    { name: "computeAddress", type: "function", stateMutability: "view",
-      inputs: [{ name: "token0", type: "address" }, { name: "token1", type: "address" }],
+  // Algebra-based (SwaprV3) - use poolByPair on the factory
+  const ALGEBRA_FACTORY_ABI = [
+    { name: "poolByPair", type: "function", stateMutability: "view",
+      inputs: [{ name: "tokenA", type: "address" }, { name: "tokenB", type: "address" }],
       outputs: [{ name: "pool", type: "address" }] }
   ];
 
   try {
     poolAddress = await publicClient.readContract({
       address: chainConfig.dex.algebraFactory,
-      abi: COMPUTE_ADDRESS_ABI,
-      functionName: "computeAddress",
+      abi: ALGEBRA_FACTORY_ABI,
+      functionName: "poolByPair",
       args: [token0, token1]
     });
   } catch (err) {
-    console.error(`Failed to compute pool address for ${outcomeToken} / ${chainConfig.collateral.symbol} pair.`);
+    console.error(`Failed to get pool address for ${outcomeToken} / ${chainConfig.collateral.symbol} pair.`);
     console.error(`Error: ${err.message}`);
     process.exit(1);
   }

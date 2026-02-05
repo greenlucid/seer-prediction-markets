@@ -23,7 +23,7 @@ export const CHAIN_CONFIGS = {
       type: "swaprv3",
       router: "0x2d3F3f0C9fAeF4A8e2d900a3AAe2E7c8f36A98B9",
       nonfungiblePositionManager: "0x91fd594c46d8b01e62dbdebed2401dde01817834",
-      algebraFactory: "0xC1b576AC6Ec749d5Ace1787bF9Ec6340908ddB47",
+      algebraFactory: "0xA0864cCA6E114013AB0e27cbd5B6f4c8947da766",
       tickSpacing: 60,
       fee: null, // Algebra doesn't use fee tiers
     },
