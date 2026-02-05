@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Check collateral approval to Router, auto-approve max if below 1M tokens.
+// Check collateral approval to Router and Position Manager, auto-approve max if below 1M tokens.
 //
 // Usage:
 //   node approve-router.mjs [--chain base]
@@ -17,26 +17,27 @@ const { account, walletClient, publicClient, chainConfig } = getClients(chainNam
 
 const collateralToken = chainConfig.collateral.address;
 const router = chainConfig.contracts.GNOSIS_ROUTER;
+const positionManager = chainConfig.dex.nonfungiblePositionManager;
 
-// Check current allowance
 const ALLOWANCE_ABI = [{ name: "allowance", type: "function", stateMutability: "view",
   inputs: [{ name: "owner", type: "address" }, { name: "spender", type: "address" }],
   outputs: [{ type: "uint256" }] }];
 
-const currentAllowance = await publicClient.readContract({
+const threshold = 1_000_000n * 10n**18n; // 1M tokens
+const maxApproval = 2n**256n - 1n; // max uint256
+
+// Check and approve Router
+const routerAllowance = await publicClient.readContract({
   address: collateralToken,
   abi: ALLOWANCE_ABI,
   functionName: "allowance",
   args: [account.address, router],
 });
 
-const threshold = 1_000_000n * 10n**18n; // 1M tokens
-const maxApproval = 2n**256n - 1n; // max uint256
+console.log(`Router approval: ${formatEther(routerAllowance)} ${chainConfig.collateral.symbol}`);
 
-console.log(`Current approval: ${formatEther(currentAllowance)} ${chainConfig.collateral.symbol}`);
-
-if (currentAllowance < threshold) {
-  console.log(`Below 1M ${chainConfig.collateral.symbol}, approving max...`);
+if (routerAllowance < threshold) {
+  console.log(`Below 1M, approving max to Router...`);
   const hash = await walletClient.writeContract({
     address: collateralToken,
     abi: ERC20_APPROVE_ABI,
@@ -46,5 +47,29 @@ if (currentAllowance < threshold) {
   await publicClient.waitForTransactionReceipt({ hash });
   console.log(`Done. Tx: ${hash}`);
 } else {
-  console.log("Approval sufficient, no action needed.");
+  console.log("Router approval sufficient.");
+}
+
+// Check and approve Position Manager (for LP)
+const pmAllowance = await publicClient.readContract({
+  address: collateralToken,
+  abi: ALLOWANCE_ABI,
+  functionName: "allowance",
+  args: [account.address, positionManager],
+});
+
+console.log(`Position Manager approval: ${formatEther(pmAllowance)} ${chainConfig.collateral.symbol}`);
+
+if (pmAllowance < threshold) {
+  console.log(`Below 1M, approving max to Position Manager...`);
+  const hash = await walletClient.writeContract({
+    address: collateralToken,
+    abi: ERC20_APPROVE_ABI,
+    functionName: "approve",
+    args: [positionManager, maxApproval],
+  });
+  await publicClient.waitForTransactionReceipt({ hash });
+  console.log(`Done. Tx: ${hash}`);
+} else {
+  console.log("Position Manager approval sufficient.");
 }

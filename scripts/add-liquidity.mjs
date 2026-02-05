@@ -183,14 +183,11 @@ if (chainConfig.dex.type === "swaprv3") {
 await publicClient.waitForTransactionReceipt({ hash });
 console.log(`Pool: ${poolAddress}`);
 
-console.log(`Approving tokens to position manager...`);
+console.log(`Approving outcome token to position manager...`);
 hash = await walletClient.writeContract({ address: outcomeToken, abi: ERC20_APPROVE_ABI, functionName: "approve",
   args: [chainConfig.dex.nonfungiblePositionManager, amount0 > amount1 ? amount0 : amount1] });
 await publicClient.waitForTransactionReceipt({ hash });
-
-hash = await walletClient.writeContract({ address: collateralToken, abi: ERC20_APPROVE_ABI, functionName: "approve",
-  args: [chainConfig.dex.nonfungiblePositionManager, amount0 > amount1 ? amount0 : amount1] });
-await publicClient.waitForTransactionReceipt({ hash });
+// Collateral approval is done once via approve-router.mjs
 
 console.log(`Minting LP position: token0=${token0}, token1=${token1}, ticks=[${tickLower}, ${tickUpper}]...`);
 

@@ -8,6 +8,10 @@ description: "Create, trade, resolve, monitor and provide liquidity in predictio
 > **Setup**: All scripts need `PRIVATE_KEY` env var (except read-only ones). Optional `RPC_URL` (defaults to chain-specific public RPC), `CHAIN` (defaults to `gnosis`).
 >
 > **⚠️ Run scripts sequentially.** Parallel transactions will fail with nonce collisions.
+>
+> **⚠️ Do NOT create batch/automation scripts.** Use existing scripts one at a time. Be patient, work through tasks step-by-step rather than trying to automate everything into a single script. This skill is comprehensive and should have everything you need.
+>
+> **⚠️ Do NOT edit skill files.** If you find bugs, issues, or missing functionality in these scripts/docs, report them to the user instead of fixing them yourself. Say what's broken and let them decide how to handle it.
 
 ---
 
