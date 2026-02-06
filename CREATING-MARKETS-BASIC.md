@@ -113,6 +113,25 @@ Include in the question if not obvious:
 
 ---
 
+### Step 4b: Understand `--min-bond`
+
+**`--min-bond`** = minimum bond (in native token) to answer on Reality.eth. This is the cost to submit/challenge answers.
+
+**⚠️ IMPORTANT: Native token differs per chain!**
+
+| Chain | Native Token | ~$10 equivalent |
+|-------|--------------|-----------------|
+| `gnosis` | xDAI | `10` |
+| `base` | ETH | `0.004` |
+| `optimism` | ETH | `0.004` |
+| `mainnet` | ETH | `0.004` |
+
+**Rule of thumb:** Aim for ~$5-20 USD worth. Too low = spam answers. Too high = nobody answers.
+
+Examples in this doc use `--min-bond 5` or `--min-bond 10` assuming Gnosis (xDAI). **Adjust for ETH chains!**
+
+---
+
 ## ⛔ STOP — Before Running create-market.mjs
 
 Do NOT proceed until you have searched current news and verified the event hasn't already happened.
