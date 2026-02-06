@@ -47,20 +47,28 @@ const collateralToken = chainConfig.collateral.address;
 const outcomeIsToken0 = outcomeToken.toLowerCase() < collateralToken.toLowerCase();
 const [token0, token1] = outcomeIsToken0 ? [outcomeToken, collateralToken] : [collateralToken, outcomeToken];
 
-// Query collateral exchange rate (how much native token per 1 collateral share)
-// Collateral must be ERC4626 compliant
+// Query collateral exchange rate (how much underlying per 1 collateral share)
 let collateralRate;
 try {
-  const collateralToNative = await pubClient.readContract({
-    address: collateralToken,
+  // Some chains (Base) need to query rate from a different chain (mainnet)
+  let rateClient = pubClient;
+  let rateAddress = collateralToken;
+  if (chainConfig.collateral.rateSource) {
+    const { getChainConfig: getChainCfg } = await import("./config/chains.mjs");
+    const srcConfig = getChainCfg(chainConfig.collateral.rateSource.chain);
+    const { createPublicClient, http } = await import("viem");
+    rateClient = createPublicClient({ chain: srcConfig.viemChain, transport: http(srcConfig.rpcUrl) });
+    rateAddress = chainConfig.collateral.rateSource.address;
+  }
+  const collateralToUnderlying = await rateClient.readContract({
+    address: rateAddress,
     abi: ERC4626_CONVERT_ABI,
     functionName: "convertToAssets",
     args: [parseEther("1")],
   });
-  collateralRate = parseFloat(formatEther(collateralToNative));
+  collateralRate = parseFloat(formatEther(collateralToUnderlying));
 } catch (err) {
-  console.error(`Error: Failed to query collateral exchange rate. Collateral token must implement ERC4626 convertToAssets.`);
-  console.error(`Collateral address: ${collateralToken}`);
+  console.error(`Error: Failed to query collateral exchange rate.`);
   console.error(`Details: ${err.message}`);
   process.exit(1);
 }

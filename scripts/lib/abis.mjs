@@ -78,6 +78,8 @@ export const SDAI_ADAPTER_ABI = [
 
 export const ERC4626_CONVERT_ABI = [
   { name: "convertToAssets", type: "function", stateMutability: "view",
+    inputs: [{ name: "shares", type: "uint256" }], outputs: [{ type: "uint256" }] },
+  { name: "previewRedeem", type: "function", stateMutability: "view",
     inputs: [{ name: "shares", type: "uint256" }], outputs: [{ type: "uint256" }] }
 ];
 

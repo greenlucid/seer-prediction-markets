@@ -79,6 +79,7 @@ export const CHAIN_CONFIGS = {
       address: "0xb5b2dc7fd34c249f4be7fb1fcea07950784229e0",
       adapter: null, // sUSDS is yield-bearing itself
       decimals: 18,
+      rateSource: { chain: "mainnet", address: "0xa3931d71877c0e7a3148cb7eb4463524fec27fbd" },
     },
     dex: {
       type: "uniswapv3",
@@ -108,6 +109,7 @@ export const CHAIN_CONFIGS = {
       address: "0x5875eee11cf8398102fdad704c9e96607675467a",
       adapter: null,
       decimals: 18,
+      rateSource: { chain: "mainnet", address: "0xa3931d71877c0e7a3148cb7eb4463524fec27fbd" },
     },
     dex: {
       type: "uniswapv3",
